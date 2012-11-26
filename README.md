@@ -1,4 +1,4 @@
-# render
+# render [![Build Status](https://secure.travis-ci.org/mpapierski/render.png)](http://travis-ci.org/mpapierski/render)
 
 Type safe compile-time templates for C++.
 
