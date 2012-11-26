@@ -21,6 +21,16 @@ struct person
 	}
 };
 
+struct dummy
+{
+	string id_;
+	dummy(string const & id)
+		: id_(id)
+	{
+
+	}
+};
+
 //____________________________________________________________________________//
 
 BOOST_AUTO_TEST_CASE (test_lazy_value)
@@ -57,22 +67,6 @@ BOOST_AUTO_TEST_CASE (test_type_wrapper)
 
 //____________________________________________________________________________//
 
-BOOST_AUTO_TEST_CASE (test_scope)
-{
-	person p1("A", "A");
-	person p2("B", "B");
-	scope s;
-	s.push(p1);
-	s.push(p2);
-	person p = s.get<person>();
-	BOOST_REQUIRE_EQUAL(p.first_name_, "B");
-	s.pop();
-	p = s.get<person>();
-	BOOST_REQUIRE_EQUAL(p.first_name_, "A");
-}
-
-//____________________________________________________________________________//
-
 BOOST_AUTO_TEST_CASE (test_each_expression)
 {
 	std::stringstream ss1;
@@ -102,3 +96,22 @@ BOOST_AUTO_TEST_CASE (test_each_expression)
 }
 
 //____________________________________________________________________________//
+
+
+//____________________________________________________________________________//
+
+BOOST_AUTO_TEST_CASE (test_each_with_nested_scope)
+{
+	std::stringstream ss1;
+	scope s;
+	list<person> person_list_inner;
+	list<dummy> dummy_list_outer;
+	person_list_inner.push_back(person("INNER", "INNER"));
+	dummy_list_outer.push_back(dummy("OUTER"));
+	// Simple expr. Should output Hello world twice.
+	(each(person_list_inner,
+		each(dummy_list_outer, get(&person::first_name_) + get(&dummy::id_)))
+	)(ss1, s);
+	BOOST_REQUIRE_EQUAL(ss1.str(), "INNEROUTER");
+}
+

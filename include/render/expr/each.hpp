@@ -37,10 +37,10 @@ struct each_impl
 			end = container_.end(); it != end; ++it)
 		{
 			// Push *it to the scope
+			scope_handler handler(s);
 			s.push(*it);
+			// Evaluate expression with updated scope.
 			expr_(t, s);
-			// Pop from the scope.
-			s.pop();
 		}
 	}
 	template <typename T>

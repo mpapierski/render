@@ -16,6 +16,13 @@ struct scope
 	 */
 	instances_type instances_;
 	/**
+	 * Get instances list.
+	 */
+	instances_type & instances()
+	{
+		return instances_;
+	}
+	/**
 	 * Push object to a scope.
 	 */
 	template <typename T>
@@ -30,13 +37,21 @@ struct scope
 	{
 		instances_.pop_back();
 	}
-	/**
-	 * Most recent instance.
-	 */
-	template <typename T>
-	T get()
+};
+
+/**
+ * RAII-enabled scope handler.
+ */
+struct scope_handler
+{
+	scope & scope_;
+	scope_handler(scope & s)
+		: scope_(s)
 	{
-		return boost::any_cast<T>(instances_.back());
+	}
+	~scope_handler()
+	{
+		scope_.pop();
 	}
 };
 

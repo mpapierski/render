@@ -1,6 +1,8 @@
 #if !defined(RENDER_EXPR_GET_HPP_INCLUDED_)
 #define RENDER_EXPR_GET_HPP_INCLUDED_
 
+#include <stdexcept>
+
 /**
  * Encapsulates pointer-to-member variable as lazy expression.
  */
@@ -19,8 +21,22 @@ struct get_pointer_to_member_variable
 	template <typename F>
 	void operator()(F & t, scope & s)
 	{
-		Cls current = s.get<Cls>();
-		t << (current.*t_);
+		bool ok = false;
+		for (scope::instances_type::iterator it = s.instances().begin(),
+			end = s.instances().end(); it != end; ++it)
+		{
+			try
+			{
+				Cls current = boost::any_cast<Cls>(*it);
+				t << (current.*t_);
+				ok = true;
+			} catch (boost::bad_any_cast)
+			{
+
+			}
+		}
+		if (!ok)
+			throw std::runtime_error("Unable to evaluate get expression with current scope.");
 	}
 
 	template <typename F>
@@ -28,6 +44,12 @@ struct get_pointer_to_member_variable
 	{
 		return add_impl<this_type, typename type_wrapper<F>::type>(*this, rhs);
 	}
+};
+
+template <typename Cls, typename T>
+struct type_wrapper<get_pointer_to_member_variable<Cls, T> >
+{
+	typedef get_pointer_to_member_variable<Cls, T> type;
 };
 
 template <typename F, typename Cls, typename T>
