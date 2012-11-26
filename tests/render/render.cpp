@@ -33,23 +33,24 @@ struct dummy
 
 //____________________________________________________________________________//
 
+struct left_shiftable
+{
+	const char * val_;
+	void operator<<(const char * value)
+	{
+		val_ = value;
+	}
+};
+	
 BOOST_AUTO_TEST_CASE (test_lazy_value)
 {
 	std::stringstream out1, out2;
 	scope s;
 	value(1)(out1, s);
 	BOOST_REQUIRE_EQUAL(out1.str(), "1");
-	
+	left_shiftable temp;
 	// Check for type safety in any left-shiftable object.
-	struct
-	{
-		const char * val_;
-		void operator<<(const char * value)
-		{
-			val_ = value;
-		}
-	} temp;
-	// Evaluate
+// Evaluate
 	value("Hello world")(temp, s);
 	BOOST_REQUIRE_EQUAL(temp.val_, "Hello world");
 }
