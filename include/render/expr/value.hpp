@@ -10,6 +10,7 @@
 template <typename T>
 struct value_impl
 {
+	typedef value_impl<T> this_type;
 	T repr_;
 	inline value_impl(T t)
 		: repr_(t)

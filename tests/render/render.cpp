@@ -87,6 +87,18 @@ BOOST_AUTO_TEST_CASE (test_each_expression)
 	std::stringstream ss2;
 	each(person_list, get(&person::first_name_))(ss2, s);
 	BOOST_REQUIRE_EQUAL(ss2.str(), "First name 1First name 2");
+	// Should output First name 1<br/>First name 2<br/>
+	std::stringstream ss3;
+	each(person_list, get(&person::first_name_) + "<br/>")(ss3, s);
+	BOOST_REQUIRE_EQUAL(ss3.str(), "First name 1<br/>First name 2<br/>");
+	// Should output <br/>First name 1<br/>First name 2
+	std::stringstream ss4;
+	each(person_list, "<br/>" + get(&person::first_name_))(ss4, s);
+	BOOST_REQUIRE_EQUAL(ss4.str(), "<br/>First name 1<br/>First name 2");
+	// Should output ->First name 1<-->First name 2<-
+	std::stringstream ss5;
+	each(person_list, "->" + get(&person::first_name_) + "<-")(ss5, s);
+	BOOST_REQUIRE_EQUAL(ss5.str(), "->First name 1<-->First name 2<-");
 }
 
 //____________________________________________________________________________//

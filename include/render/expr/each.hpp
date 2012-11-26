@@ -8,6 +8,7 @@
 template <typename ContainerT, typename Expr>
 struct each_impl
 {
+	typedef each_impl<ContainerT, Expr> this_type;
 	/**
 	 * Container.
 	 */
@@ -42,8 +43,16 @@ struct each_impl
 			s.pop();
 		}
 	}
+	template <typename T>
+	add_impl<this_type, typename type_wrapper<T>::type> operator+(typename type_wrapper<T>::type rhs)
+	{
+		return add_impl<this_type, typename type_wrapper<T>::type>(*this, rhs);
+	}
 };
 
+/**
+ * Return new lazy "each" generator.
+ */
 template <typename ContainerT, typename Expr>
 each_impl<ContainerT, Expr> each(ContainerT container, Expr expr)
 {

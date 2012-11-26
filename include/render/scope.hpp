@@ -30,7 +30,9 @@ struct scope
 	{
 		instances_.pop_back();
 	}
-
+	/**
+	 * Most recent instance.
+	 */
 	template <typename T>
 	T get()
 	{
