@@ -22,17 +22,17 @@ struct get_pointer_to_member_variable
 	void operator()(F & t, scope & s)
 	{
 		bool ok = false;
-		for (scope::instances_type::iterator it = s.instances().begin(),
-			end = s.instances().end(); it != end; ++it)
+		for (scope::instances_type::const_reverse_iterator it = s.instances().rbegin(),
+			end = s.instances().rend(); it != end; ++it)
 		{
 			try
 			{
-				Cls current = boost::any_cast<Cls>(*it);
-				t << (current.*t_);
+				reference_wrapper<const Cls> current = boost::any_cast<reference_wrapper<const Cls> >(*it);
+				t << ((*current).*t_);
 				ok = true;
+				break;
 			} catch (boost::bad_any_cast)
 			{
-
 			}
 		}
 		if (!ok)

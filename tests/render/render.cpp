@@ -21,6 +21,7 @@ struct person
 	}
 };
 
+template <unsigned int N>
 struct dummy
 {
 	string id_;
@@ -98,21 +99,74 @@ BOOST_AUTO_TEST_CASE (test_each_expression)
 
 //____________________________________________________________________________//
 
-
-//____________________________________________________________________________//
-
 BOOST_AUTO_TEST_CASE (test_each_with_nested_scope)
 {
 	std::stringstream ss1;
 	scope s;
 	list<person> person_list_inner;
-	list<dummy> dummy_list_outer;
+	list<dummy<0> > dummy_list_outer;
 	person_list_inner.push_back(person("INNER", "INNER"));
-	dummy_list_outer.push_back(dummy("OUTER"));
+	dummy_list_outer.push_back(dummy<0>("OUTER"));
 	// Simple expr. Should output Hello world twice.
 	(each(person_list_inner,
-		each(dummy_list_outer, get(&person::first_name_) + get(&dummy::id_)))
+		each(dummy_list_outer, get(&person::first_name_) + get(&dummy<0>::id_)))
 	)(ss1, s);
 	BOOST_REQUIRE_EQUAL(ss1.str(), "INNEROUTER");
 }
 
+//____________________________________________________________________________//
+
+BOOST_AUTO_TEST_CASE (test_deeply_nested_scope)
+{
+	std::stringstream ss;
+	scope s;
+	list<dummy<0> > list0;
+	list<dummy<1> > list1;
+	list<dummy<2> > list2;
+	list<dummy<3> > list3;
+	list<dummy<0> > list4; // Same type as list0!
+	
+	list0.push_back(dummy<0>("0"));
+	list1.push_back(dummy<1>("1"));
+	list2.push_back(dummy<2>("2"));
+	list3.push_back(dummy<3>("3"));
+	list4.push_back(dummy<0>("A"));
+	// Broken deeply nested scope. 
+	BOOST_REQUIRE_THROW(each(list0,
+		each(list1,
+			each(list2,
+				each(list3,
+					each(list4,
+						get(&dummy<0>::id_)
+						+ get(&dummy<1>::id_)
+						+ get(&dummy<2>::id_)
+						+ get(&dummy<3>::id_)
+						+ get(&dummy<4>::id_) // Oops!
+					)
+				)
+			)
+		)
+	)(ss, s), std::runtime_error); // dummy<4> is not in this scope!
+	//BOOST_REQUIRE(s.instances().empty());
+	// Valid deeply nested scope. 
+	scope s2;
+	each(list0,
+		each(list1,
+			each(list2,
+				each(list3,
+					each(list4,
+						get(&dummy<0>::id_) // 5
+						+ get(&dummy<1>::id_) // 2
+						+ get(&dummy<2>::id_) // 3
+						+ get(&dummy<3>::id_) // 4
+						+ get(&dummy<0>::id_) // 5
+					)
+				)
+			)
+		)
+	)(ss, s2);
+	//BOOST_REQUIRE_EQUAL(ss.str().length(), 5);
+	BOOST_REQUIRE_EQUAL(ss.str(), "52345");
+}
+
+//____________________________________________________________________________//

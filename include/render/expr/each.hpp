@@ -12,7 +12,7 @@ struct each_impl
 	/**
 	 * Container.
 	 */
-	ContainerT container_;
+	ContainerT & container_;
 	/**
 	 * Expression.
 	 */
@@ -20,7 +20,7 @@ struct each_impl
 	/**
 	 * Construct each expression.
 	 */
-	each_impl(ContainerT container, Expr expr)
+	each_impl(ContainerT & container, Expr const & expr)
 		: container_(container)
 		, expr_(expr)
 	{
@@ -32,7 +32,7 @@ struct each_impl
 	template <typename T>
 	void operator()(T & t, scope & s)
 	{
-		typedef typename ContainerT::iterator iterator;
+		typedef typename ContainerT::const_iterator iterator;
 		for (iterator it = container_.begin(),
 			end = container_.end(); it != end; ++it)
 		{
@@ -48,6 +48,16 @@ struct each_impl
 	{
 		return add_impl<this_type, typename type_wrapper<T>::type>(*this, rhs);
 	}
+};
+
+/**
+ * Type wrapper specialization.
+ * Each expression will not be wrapped around value_impl.
+ */
+template <typename ContainerT, typename Expr>
+struct type_wrapper<each_impl<ContainerT, Expr> >
+{
+	typedef each_impl<ContainerT, Expr> type;
 };
 
 /**

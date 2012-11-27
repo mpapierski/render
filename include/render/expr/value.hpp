@@ -12,17 +12,16 @@ struct value_impl
 {
 	typedef value_impl<T> this_type;
 	T repr_;
-	inline value_impl(T t)
+	inline value_impl(T const & t)
 		: repr_(t)
 	{
 		//
 	}
-
 	/**
 	 * Evaluate. Out must be left-shiftable.
 	 */
 	template <typename Out>
-	inline void operator()(Out & out, scope&)
+	inline void operator()(Out & out, scope& s)
 	{
 		out << repr_;
 	}

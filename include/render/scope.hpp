@@ -26,9 +26,9 @@ struct scope
 	 * Push object to a scope.
 	 */
 	template <typename T>
-	void push(T t)
+	void push(T & t)
 	{
-		instances_.push_back(t);
+		instances_.push_back(reference_wrapper<T>(t));
 	}
 	/**
 	 * Pop from a scope.
@@ -51,7 +51,10 @@ struct scope_handler
 	}
 	~scope_handler()
 	{
-		scope_.pop();
+		if (!scope_.instances().empty())
+		{
+			scope_.pop();
+		}	
 	}
 };
 

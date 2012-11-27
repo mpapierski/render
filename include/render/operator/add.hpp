@@ -28,4 +28,14 @@ struct add_impl
 	}
 };
 
+/**
+ * Type wrapper specialization.
+ * Add will not be wrapped around value_impl.
+ */
+template <typename Lhs, typename Rhs>
+struct type_wrapper<add_impl<Lhs, Rhs> >
+{
+	typedef add_impl<Lhs, Rhs> type;
+};
+
 #endif /* RENDER_OPERATOR_ADD_HPP_INCLUDED_ */
