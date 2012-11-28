@@ -43,7 +43,7 @@ struct get_pointer_to_member_variable
 	}
 
 	template <typename F>
-	typename uppercase_tag::template impl<this_type>::type operator|(filter_tag<F> const & t)
+	typename F::template impl<this_type>::type operator|(filter_tag<F> const & t)
 	{
 		return typename F::template impl<this_type>::type(*this);
 	}
