@@ -11,19 +11,20 @@ template <typename T>
 struct value_impl
 {
 	typedef value_impl<T> this_type;
-	T repr_;
+	std::string repr_;
+
 	inline value_impl(T const & t)
-		: repr_(t)
 	{
-		//
+		std::stringstream ss;
+		ss << t;
+		repr_ = ss.str();
 	}
 	/**
-	 * Evaluate. Out must be left-shiftable.
+	 * Evaluate.
 	 */
-	template <typename Out>
-	inline void operator()(Out & out, scope& s)
+	inline std::string operator()(scope& s)
 	{
-		out << repr_;
+		return repr_;
 	}
 };
 

@@ -29,9 +29,9 @@ struct each_impl
 	/**
 	 * Evaluate.
 	 */
-	template <typename T>
-	void operator()(T & t, scope & s)
+	std::string operator()(scope & s)
 	{
+		std::string result;
 		typedef typename ContainerT::const_iterator iterator;
 		for (iterator it = container_.begin(),
 			end = container_.end(); it != end; ++it)
@@ -40,8 +40,9 @@ struct each_impl
 			scope_handler handler(s);
 			s.push(*it);
 			// Evaluate expression with updated scope.
-			expr_(t, s);
+			result += expr_(s);
 		}
+		return result;
 	}
 	template <typename T>
 	add_impl<this_type, typename type_wrapper<T>::type> operator+(typename type_wrapper<T>::type rhs)

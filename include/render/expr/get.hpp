@@ -17,26 +17,23 @@ struct get_pointer_to_member_variable
 	{
 
 	}
-
-	template <typename F>
-	void operator()(F & t, scope & s)
+	/**
+	 * Evaluate
+	 */
+	std::string operator()(scope & s)
 	{
-		bool ok = false;
 		for (scope::instances_type::const_reverse_iterator it = s.instances().rbegin(),
 			end = s.instances().rend(); it != end; ++it)
 		{
 			try
 			{
 				reference_wrapper<const Cls> current = boost::any_cast<reference_wrapper<const Cls> >(*it);
-				t << ((*current).*t_);
-				ok = true;
-				break;
+				return ((*current).*t_);
 			} catch (boost::bad_any_cast)
 			{
 			}
 		}
-		if (!ok)
-			throw std::runtime_error("Unable to evaluate get expression with current scope.");
+		throw std::runtime_error("Unable to evaluate get expression with current scope.");
 	}
 
 	template <typename F>

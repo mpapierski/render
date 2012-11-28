@@ -13,12 +13,14 @@ struct add_impl
 	{
 		//
 	}
-
-	template <typename F>
-	inline void operator()(F & res, scope & ctx)
+	/**
+	 * Evaluate.
+	 */
+	inline std::string operator()(scope & s)
 	{
-		lhs_(res, ctx);
-		rhs_(res, ctx);
+		std::string const & lval = lhs_(s);
+		std::string const & rval = rhs_(s);
+		return lval + rval;
 	}
 
 	template <typename T>

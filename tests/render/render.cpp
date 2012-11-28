@@ -34,91 +34,71 @@ struct dummy
 
 //____________________________________________________________________________//
 
-struct left_shiftable
-{
-	const char * val_;
-	void operator<<(const char * value)
-	{
-		val_ = value;
-	}
-};
-	
 BOOST_AUTO_TEST_CASE (test_lazy_value)
 {
-	std::stringstream out1, out2;
 	scope s;
-	value(1)(out1, s);
-	BOOST_REQUIRE_EQUAL(out1.str(), "1");
-	left_shiftable temp;
-	// Check for type safety in any left-shiftable object.
-// Evaluate
-	value("Hello world")(temp, s);
-	BOOST_REQUIRE_EQUAL(temp.val_, "Hello world");
+	std::string result1 = value(1)(s);
+	BOOST_REQUIRE_EQUAL(result1, "1");
+	// Evaluate
+	std::string result2 = value("Hello world")(s);
+	BOOST_REQUIRE_EQUAL(result2, "Hello world");
 }
 
 //____________________________________________________________________________//
 
 BOOST_AUTO_TEST_CASE (test_type_wrapper)
 {
-	std::stringstream ss;
 	scope s;
 	typedef type_wrapper<int>::type int_;
-	int_(1234)(ss, s);
-	BOOST_REQUIRE_EQUAL(ss.str(), "1234");
+	std::string result = int_(1234)(s);
+	BOOST_REQUIRE_EQUAL(result, "1234");
 }
 
 //____________________________________________________________________________//
 
 BOOST_AUTO_TEST_CASE (test_each_expression)
 {
-	std::stringstream ss1;
 	scope s;
 	list<person> person_list;
 	person_list.push_back(person("First name 1", "Last name 1"));
 	person_list.push_back(person("First name 2", "Last name 2"));
 	// Simple expr. Should output Hello world twice.
-	each(person_list, value("Hello world"))(ss1, s);
-	BOOST_REQUIRE_EQUAL(ss1.str(), "Hello worldHello world");
+	std::string result1 = each(person_list, value("Hello world"))(s);
+	BOOST_REQUIRE_EQUAL(result1, "Hello worldHello world");
 	// Should output First name 1First name 2
-	std::stringstream ss2;
-	each(person_list, get(&person::first_name_))(ss2, s);
-	BOOST_REQUIRE_EQUAL(ss2.str(), "First name 1First name 2");
+	std::string result2 = each(person_list, get(&person::first_name_))(s);
+	BOOST_REQUIRE_EQUAL(result2, "First name 1First name 2");
 	// Should output First name 1<br/>First name 2<br/>
-	std::stringstream ss3;
-	each(person_list, get(&person::first_name_) + "<br/>")(ss3, s);
-	BOOST_REQUIRE_EQUAL(ss3.str(), "First name 1<br/>First name 2<br/>");
+	std::string result3 = each(person_list, get(&person::first_name_) + "<br/>")(s);
+	BOOST_REQUIRE_EQUAL(result3, "First name 1<br/>First name 2<br/>");
 	// Should output <br/>First name 1<br/>First name 2
-	std::stringstream ss4;
-	each(person_list, "<br/>" + get(&person::first_name_))(ss4, s);
-	BOOST_REQUIRE_EQUAL(ss4.str(), "<br/>First name 1<br/>First name 2");
+	std::string result4 = each(person_list, "<br/>" + get(&person::first_name_))(s);
+	BOOST_REQUIRE_EQUAL(result4, "<br/>First name 1<br/>First name 2");
 	// Should output ->First name 1<-->First name 2<-
-	std::stringstream ss5;
-	each(person_list, "->" + get(&person::first_name_) + "<-")(ss5, s);
-	BOOST_REQUIRE_EQUAL(ss5.str(), "->First name 1<-->First name 2<-");
+	std::string result5 = each(person_list, "->" + get(&person::first_name_) + "<-")(s);
+	BOOST_REQUIRE_EQUAL(result5, "->First name 1<-->First name 2<-");
 }
 
 //____________________________________________________________________________//
 
 BOOST_AUTO_TEST_CASE (test_each_with_nested_scope)
 {
-	std::stringstream ss1;
 	scope s;
 	list<person> person_list_inner;
 	list<dummy<0> > dummy_list_outer;
 	person_list_inner.push_back(person("INNER", "INNER"));
 	dummy_list_outer.push_back(dummy<0>("OUTER"));
 	// Simple expr. Should output Hello world twice.
-	(each(person_list_inner,
+	std::string result = (each(person_list_inner,
 		each(dummy_list_outer, get(&person::first_name_) + get(&dummy<0>::id_)))
-	)(ss1, s);
-	BOOST_REQUIRE_EQUAL(ss1.str(), "INNEROUTER");
+	)(s);
+	BOOST_REQUIRE_EQUAL(result, "INNEROUTER");
 }
 
 //____________________________________________________________________________//
 
 BOOST_AUTO_TEST_CASE (test_deeply_nested_scope)
 {
-	std::stringstream ss;
 	scope s;
 	list<dummy<0> > list0;
 	list<dummy<1> > list1;
@@ -146,27 +126,27 @@ BOOST_AUTO_TEST_CASE (test_deeply_nested_scope)
 				)
 			)
 		)
-	)(ss, s), std::runtime_error); // dummy<4> is not in this scope!
-	//BOOST_REQUIRE(s.instances().empty());
+	)(s), std::runtime_error); // dummy<4> is not in this scope!
+	BOOST_REQUIRE(s.instances().empty());
 	// Valid deeply nested scope. 
 	scope s2;
-	each(list0,
+	std::string result = each(list0,
 		each(list1,
 			each(list2,
 				each(list3,
 					each(list4,
-						get(&dummy<0>::id_) // 5
-						+ get(&dummy<1>::id_) // 2
-						+ get(&dummy<2>::id_) // 3
-						+ get(&dummy<3>::id_) // 4
-						+ get(&dummy<0>::id_) // 5
+						get(&dummy<0>::id_) // A
+						+ get(&dummy<1>::id_) // 1
+						+ get(&dummy<2>::id_) // 2
+						+ get(&dummy<3>::id_) // 3
+						+ get(&dummy<0>::id_) // A
 					)
 				)
 			)
 		)
-	)(ss, s2);
-	//BOOST_REQUIRE_EQUAL(ss.str().length(), 5);
-	BOOST_REQUIRE_EQUAL(ss.str(), "52345");
+	)(s2);
+	BOOST_REQUIRE_EQUAL(result.length(), 5);
+	BOOST_REQUIRE_EQUAL(result, "A123A");
 }
 
 //____________________________________________________________________________//
