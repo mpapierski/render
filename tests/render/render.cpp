@@ -133,7 +133,6 @@ BOOST_AUTO_TEST_CASE (test_deeply_nested_scope)
 	)(s), std::runtime_error); // dummy<4> is not in this scope!
 	BOOST_REQUIRE(s.instances().empty());
 	// Valid deeply nested scope. 
-	scope s2;
 	std::string result = each(list0,
 		each(list1,
 			each(list2,
@@ -148,9 +147,28 @@ BOOST_AUTO_TEST_CASE (test_deeply_nested_scope)
 				)
 			)
 		)
-	)(s2);
+	)(s);
+	BOOST_REQUIRE(s.instances().empty());
 	BOOST_REQUIRE_EQUAL(result.length(), 5);
 	BOOST_REQUIRE_EQUAL(result, "A123A");
+
+	std::string result2 = each(list0,
+		"start" + get(&dummy<0>::id_) + each(list1,
+			each(list2,
+				each(list3,
+					each(list4,
+						get(&dummy<0>::id_) // A
+						+ get(&dummy<1>::id_) // 1
+						+ get(&dummy<2>::id_) // 2
+						+ get(&dummy<3>::id_) // 3
+						+ get(&dummy<0>::id_) // A
+					)
+				)
+			)
+		) + "stop"
+	)(s);
+	BOOST_REQUIRE(s.instances().empty());
+	BOOST_REQUIRE_EQUAL(result2, "start0A123Astop");
 }
 
 //____________________________________________________________________________//
