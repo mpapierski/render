@@ -27,7 +27,7 @@ struct get_pointer_to_member_variable
 		{
 			try
 			{
-				reference_wrapper<const Cls> current = boost::any_cast<reference_wrapper<const Cls> >(*it);
+				reference_wrapper<Cls> current = boost::any_cast<reference_wrapper<Cls> >(*it);
 				return ((*current).*t_);
 			} catch (boost::bad_any_cast)
 			{
@@ -40,6 +40,12 @@ struct get_pointer_to_member_variable
 	add_impl<this_type, typename type_wrapper<F>::type> operator+(F rhs)
 	{
 		return add_impl<this_type, typename type_wrapper<F>::type>(*this, rhs);
+	}
+
+	template <typename F>
+	typename uppercase_tag::template impl<this_type>::type operator|(filter_tag<F> const & t)
+	{
+		return typename F::template impl<this_type>::type(*this);
 	}
 };
 

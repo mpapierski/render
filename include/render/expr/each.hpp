@@ -32,7 +32,7 @@ struct each_impl
 	std::string operator()(scope & s)
 	{
 		std::string result;
-		typedef typename ContainerT::const_iterator iterator;
+		typedef typename ContainerT::iterator iterator;
 		for (iterator it = container_.begin(),
 			end = container_.end(); it != end; ++it)
 		{

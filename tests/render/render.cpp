@@ -172,3 +172,14 @@ BOOST_AUTO_TEST_CASE (test_deeply_nested_scope)
 }
 
 //____________________________________________________________________________//
+
+BOOST_AUTO_TEST_CASE (test_simple_filter_expression)
+{
+	scope s;
+	dummy<0> d0("hello world");
+	s.push(d0);
+	std::string result = (get(&dummy<0>::id_) | uppercase())(s);
+	BOOST_REQUIRE_EQUAL(result, "HELLO WORLD");
+}
+
+//____________________________________________________________________________//
