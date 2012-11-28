@@ -77,6 +77,10 @@ BOOST_AUTO_TEST_CASE (test_each_expression)
 	// Should output ->First name 1<-->First name 2<-
 	std::string result5 = each(person_list, "->" + get(&person::first_name_) + "<-")(s);
 	BOOST_REQUIRE_EQUAL(result5, "->First name 1<-->First name 2<-");
+	// HTML list of elements
+	std::string result6 = ("<ul>" + each(person_list, "<li>" + get(&person::first_name_) + "</li>") + "</ul>")(s);
+	BOOST_REQUIRE_EQUAL(result6, "<ul><li>First name 1</li><li>First name 2</li></ul>");
+	
 }
 
 //____________________________________________________________________________//

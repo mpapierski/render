@@ -62,6 +62,15 @@ struct type_wrapper<each_impl<ContainerT, Expr> >
 };
 
 /**
+ * Concatenate "any" type with each expr.
+ */
+template <typename T, typename ContainerT, typename Expr>
+add_impl<typename type_wrapper<T>::type, each_impl<ContainerT, Expr> > operator+(T t, each_impl<ContainerT, Expr> const & expr)
+{
+	return add_impl<typename type_wrapper<T>::type, each_impl<ContainerT, Expr> >(t, expr);
+}
+
+/**
  * Return new lazy "each" generator.
  */
 template <typename ContainerT, typename Expr>
