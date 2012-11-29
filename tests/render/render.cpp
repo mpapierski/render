@@ -26,8 +26,10 @@ template <unsigned int N>
 struct dummy
 {
 	string id_;
+	int value_;
 	dummy(string const & id)
 		: id_(id)
+		, value_(0)
 	{
 
 	}
@@ -53,6 +55,20 @@ BOOST_AUTO_TEST_CASE (test_type_wrapper)
 	typedef type_wrapper<int>::type int_;
 	std::string result = int_(1234)(s);
 	BOOST_REQUIRE_EQUAL(result, "1234");
+}
+
+//____________________________________________________________________________//
+
+BOOST_AUTO_TEST_CASE (test_get_expression)
+{
+	scope s;
+	dummy<0> d("dummy");
+	d.value_ = 6969;
+	s.push(d);
+	std::string result1 = get(&dummy<0>::id_)(s);
+	BOOST_REQUIRE_EQUAL(result1, "dummy");
+	std::string result2 = get(&dummy<0>::value_)(s);
+	BOOST_REQUIRE_EQUAL(result2, "6969");
 }
 
 //____________________________________________________________________________//

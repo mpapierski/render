@@ -1,6 +1,7 @@
 #if !defined(RENDER_EXPR_GET_HPP_INCLUDED_)
 #define RENDER_EXPR_GET_HPP_INCLUDED_
 
+#include <sstream>
 #include <stdexcept>
 
 namespace render {
@@ -30,7 +31,9 @@ struct get_pointer_to_member_variable
 			try
 			{
 				reference_wrapper<Cls> current = boost::any_cast<reference_wrapper<Cls> >(*it);
-				return ((*current).*t_);
+				std::stringstream ss;
+				ss << ((*current).*t_);
+				return ss.str();
 			} catch (boost::bad_any_cast)
 			{
 			}
