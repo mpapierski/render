@@ -1,6 +1,8 @@
 #if !defined(RENDER_OPERATOR_ADD_HPP_INCLUDED_)
 #define RENDER_OPERATOR_ADD_HPP_INCLUDED_
 
+namespace render {
+
 template <typename Lhs, typename Rhs>
 struct add_impl
 {
@@ -45,5 +47,7 @@ struct type_wrapper<add_impl<Lhs, Rhs> >
 {
 	typedef add_impl<Lhs, Rhs> type;
 };
+
+} /* /namespace render */
 
 #endif /* RENDER_OPERATOR_ADD_HPP_INCLUDED_ */

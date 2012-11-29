@@ -5,6 +5,8 @@
 #include <functional>
 #include <locale>
 
+namespace render {
+
 /**
  * Implementation of "lowercase filter".
  */
@@ -48,5 +50,7 @@ filter_tag<lowercase_tag> lowercase()
 {
 	return filter_tag<lowercase_tag>();
 }
+
+} /* /namespace render */
 
 #endif /* RENDER_FILTER_LOWERCASE_HPP_INCLUDED_ */

@@ -3,6 +3,8 @@
 
 #include <stdexcept>
 
+namespace render {
+
 /**
  * Encapsulates pointer-to-member variable as lazy expression.
  */
@@ -67,6 +69,8 @@ get_pointer_to_member_variable<Cls, T> get(T Cls::*t)
 {
 	return get_pointer_to_member_variable<Cls, T>(t);
 }
+
+} /* /namespace render */
 
 #endif /* RENDER_EXPR_GET_HPP_INCLUDED_ */
 

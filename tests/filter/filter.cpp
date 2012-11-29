@@ -6,6 +6,7 @@
 
 using namespace std;
 using namespace boost;
+using namespace render;
 
 template <unsigned int N>
 struct dummy

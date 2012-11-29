@@ -8,6 +8,7 @@
 
 using namespace std;
 using namespace boost;
+using namespace render;
 
 struct person
 {

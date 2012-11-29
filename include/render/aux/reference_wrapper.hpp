@@ -1,6 +1,8 @@
 #if !defined(RENDER_AUX_REFERENCE_WRAPPER_HPP_INCLUDED_)
 #define RENDER_AUX_REFERENCE_WRAPPER_HPP_INCLUDED_
 
+namespace render {
+
 /**
  * Wrap reference in a object.
  */
@@ -19,5 +21,7 @@ struct reference_wrapper
 		return t_;
 	}
 };
+
+} /* /namespace render */
 
 #endif /* RENDER_AUX_REFERENCE_WRAPPER_HPP_INCLUDED_ */

@@ -1,6 +1,8 @@
 #if !defined(RENDER_EXPR_EACH_HPP_INCLUDED_)
 #define RENDER_EXPR_EACH_HPP_INCLUDED_
 
+namespace render {
+
 /**
  * Generator class which iterates over a container,
  * using each element as a scope.
@@ -84,5 +86,7 @@ each_impl<ContainerT, Expr> each(ContainerT container, Expr expr)
 {
 	return each_impl<ContainerT, Expr>(container, expr);
 }
+
+} /* /namespace render */
 
 #endif /* RENDER_EXPR_EACH_HPP_INCLUDED_ */

@@ -5,6 +5,8 @@
 #include <functional>
 #include <locale>
 
+namespace render {
+
 /**
  * Implementation of "uppercase filter".
  */
@@ -48,5 +50,7 @@ filter_tag<uppercase_tag> uppercase()
 {
 	return filter_tag<uppercase_tag>();
 }
+
+} /* /namespace render */
 
 #endif /* RENDER_FILTER_UPPERCASE_HPP_INCLUDED_ */

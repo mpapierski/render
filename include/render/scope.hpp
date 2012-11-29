@@ -5,6 +5,8 @@
 #include <deque>
 #include <boost/any.hpp>
 
+namespace render {
+
 /**
  * Evaluation scope.
  */
@@ -57,5 +59,7 @@ struct scope_handler
 		}	
 	}
 };
+
+} /* /namespace render */
 
 #endif /* RENDER_SCOPE_HPP_INCLUDED_ */

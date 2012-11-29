@@ -3,6 +3,8 @@
 
 #include <render/scope.hpp>
 
+namespace render {
+
 /**
  * Lazy value.
  * Evaluates to the held value.
@@ -39,5 +41,7 @@ value_impl<T> value(T t)
 {
 	return value_impl<T>(t);
 }
+
+} /* /namespace render */
 
 #endif /* RENDER_EXPR_VALUE_HPP_INCLUDED_ */
