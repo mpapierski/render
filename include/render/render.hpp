@@ -2,6 +2,7 @@
 #define RENDER_HPP_INCLUDED_
 
 #include <render/aux/reference_wrapper.hpp>
+#include <render/filter/tag.hpp>
 #include <render/expr/value.hpp>
 #include <render/type_wrapper.hpp>
 #include <render/scope.hpp>

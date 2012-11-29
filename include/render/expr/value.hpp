@@ -26,6 +26,12 @@ struct value_impl
 	{
 		return repr_;
 	}
+	
+	template <typename F>
+	typename F::template impl<this_type>::type operator|(filter_tag<F> const & t)
+	{
+		return typename F::template impl<this_type>::type(*this);
+	}
 };
 
 template <typename T>
