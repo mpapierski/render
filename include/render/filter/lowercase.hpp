@@ -1,30 +1,30 @@
-#if !defined(RENDER_FILTER_UPPERCASE_HPP_INCLUDED_)
-#define RENDER_FILTER_UPPERCASE_HPP_INCLUDED_
+#if !defined(RENDER_FILTER_LOWERCASE_HPP_INCLUDED_)
+#define RENDER_FILTER_LOWERCASE_HPP_INCLUDED_
 
 #include <algorithm>
 #include <functional>
 #include <locale>
 
 /**
- * Implementation of "uppercase filter".
+ * Implementation of "lowercase filter".
  */
 template <typename Lhs>
-struct uppercase_impl
+struct lowercase_impl
 {
 	Lhs lhs_;
-	uppercase_impl(Lhs const & lhs)
+	lowercase_impl(Lhs const & lhs)
 		: lhs_(lhs)
 	{
 	}
 	/**
-	 * Evaluate LHS expression, and uppercase it.
+	 * Evaluate LHS expression, and lowercase it.
 	 */
 	std::string operator()(scope & s)
 	{
 		std::locale loc;
 		std::string eval = lhs_(s);
 		std::transform(eval.begin(), eval.end(), eval.begin(),
-			std::bind2nd(std::ptr_fun(&std::toupper<char>), loc));
+			std::bind2nd(std::ptr_fun(&std::tolower<char>), loc));
 		return eval;
 	}
 };
@@ -35,18 +35,18 @@ struct uppercase_impl
  * and then from the other expressions we can get
  * straight to its implementation using a templated "rebind".
  */
-struct uppercase_tag
+struct lowercase_tag
 {
 	template <typename T>
 	struct impl
 	{
-		typedef uppercase_impl<T> type;
+		typedef lowercase_impl<T> type;
 	};
 };
 
-filter_tag<uppercase_tag> uppercase()
+filter_tag<lowercase_tag> lowercase()
 {
-	return filter_tag<uppercase_tag>();
+	return filter_tag<lowercase_tag>();
 }
 
-#endif /* RENDER_FILTER_UPPERCASE_HPP_INCLUDED_ */
+#endif /* RENDER_FILTER_LOWERCASE_HPP_INCLUDED_ */

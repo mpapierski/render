@@ -5,7 +5,7 @@
 #include <render/expr/value.hpp>
 #include <render/type_wrapper.hpp>
 #include <render/scope.hpp>
-#include <render/filter/uppercase.hpp>
+#include <render/filter.hpp>
 #include <render/operator/add.hpp>
 #include <render/expr/each.hpp>
 #include <render/expr/get.hpp>
