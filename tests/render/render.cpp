@@ -20,6 +20,11 @@ struct person
 	{
 
 	}
+
+	string get_first_name()
+	{
+		return first_name_;
+	}
 };
 
 template <unsigned int N>
@@ -32,6 +37,16 @@ struct dummy
 		, value_(0)
 	{
 
+	}
+
+	string get_id()
+	{
+		return id_;
+	}
+
+	int get_value()
+	{
+		return value_;
 	}
 };
 
@@ -59,7 +74,7 @@ BOOST_AUTO_TEST_CASE (test_type_wrapper)
 
 //____________________________________________________________________________//
 
-BOOST_AUTO_TEST_CASE (test_get_expression)
+BOOST_AUTO_TEST_CASE (test_get_pointer_to_member_variable_expression)
 {
 	scope s;
 	dummy<0> d("dummy");
@@ -69,6 +84,30 @@ BOOST_AUTO_TEST_CASE (test_get_expression)
 	BOOST_REQUIRE_EQUAL(result1, "dummy");
 	std::string result2 = get(&dummy<0>::value_)(s);
 	BOOST_REQUIRE_EQUAL(result2, "6969");
+}
+
+//____________________________________________________________________________//
+
+BOOST_AUTO_TEST_CASE (test_get_pointer_to_member_method_expression)
+{
+	scope s;
+	dummy<0> d("dummy");
+	d.value_ = 6969;
+	s.push(d);
+	std::string result1 = get(&dummy<0>::get_id)(s);
+	BOOST_REQUIRE_EQUAL(result1, "dummy");
+	std::string result2 = get(&dummy<0>::get_value)(s);
+	BOOST_REQUIRE_EQUAL(result2, "6969");
+	// add_impl
+	std::string result3 = (get(&dummy<0>::get_value) + ".")(s);
+	BOOST_REQUIRE_EQUAL(result3, "6969.");
+	// each expr with pointer to member method
+	list<person> person_list;
+	person_list.push_back(person("First name 1", "Last name 1"));
+	person_list.push_back(person("First name 2", "Last name 2"));
+	std::string result4 = each(person_list, get(&person::get_first_name))(s);
+	BOOST_REQUIRE_EQUAL(result4, "First name 1First name 2");
+	
 }
 
 //____________________________________________________________________________//
