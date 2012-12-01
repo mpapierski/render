@@ -82,7 +82,7 @@ add_impl<typename type_wrapper<T>::type, each_impl<ContainerT, Expr> > operator+
  * Return new lazy "each" generator.
  */
 template <typename ContainerT, typename Expr>
-each_impl<ContainerT, Expr> each(ContainerT container, Expr expr)
+each_impl<ContainerT, Expr> each(ContainerT & container, Expr expr)
 {
 	return each_impl<ContainerT, Expr>(container, expr);
 }
