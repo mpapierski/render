@@ -8,7 +8,7 @@
 #include <render/scope.hpp>
 #include <render/filter.hpp>
 #include <render/operator/add.hpp>
-#include <render/expr/each.hpp>
 #include <render/expr/get.hpp>
+#include <render/expr/each.hpp>
 
 #endif /* RENDER_HPP_INCLUDED_ */

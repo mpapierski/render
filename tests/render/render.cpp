@@ -240,6 +240,9 @@ BOOST_AUTO_TEST_CASE (test_scoped_each_expression)
 	BOOST_REQUIRE(s.instances().empty());
 	s.push(dummies);
 	BOOST_REQUIRE_EQUAL(get<std::list<dummy<0> > >()(s).size(), 2);
+	BOOST_REQUIRE(!s.instances().empty());
+	std::string result = each(get<std::list<dummy<0> > >(), get(&dummy<0>::id_) + "<br/>")(s);
+	BOOST_REQUIRE_EQUAL(result, "Dummy 1<br/>Dummy 2<br/>");
 }
 
 //____________________________________________________________________________//
