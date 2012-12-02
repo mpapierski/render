@@ -228,3 +228,18 @@ BOOST_AUTO_TEST_CASE (test_deeply_nested_scope)
 }
 
 //____________________________________________________________________________//
+
+BOOST_AUTO_TEST_CASE (test_scoped_each_expression)
+{
+	std::list<dummy<0> > dummies;
+	dummies.push_back(dummy<0>("Dummy 1"));
+	dummies.push_back(dummy<0>("Dummy 2"));
+	scope s;
+	
+	BOOST_REQUIRE_THROW(get<std::list<dummy<0> > >()(s), std::runtime_error);
+	BOOST_REQUIRE(s.instances().empty());
+	s.push(dummies);
+	BOOST_REQUIRE_EQUAL(get<std::list<dummy<0> > >()(s).size(), 2);
+}
+
+//____________________________________________________________________________//
