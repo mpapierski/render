@@ -10,7 +10,7 @@ namespace render {
  * Encapsulates pointer-to-member variable as lazy expression.
  */
 template <typename Cls, typename T>
-struct get_pointer_to_member_method
+struct get_pointer_to_member_method: scope_lookup_impl<Cls>
 {
 	typedef get_pointer_to_member_method<Cls, T> this_type;
 	typedef T (Cls::*type)();
@@ -18,27 +18,17 @@ struct get_pointer_to_member_method
 	get_pointer_to_member_method(type t)
 		: t_(t)
 	{
-
 	}
+
 	/**
 	 * Evaluate
 	 */
 	std::string operator()(scope & s)
 	{
-		for (scope::instances_type::const_reverse_iterator it = s.instances().rbegin(),
-			end = s.instances().rend(); it != end; ++it)
-		{
-			try
-			{
-				reference_wrapper<Cls> current = boost::any_cast<reference_wrapper<Cls> >(*it);
-				std::stringstream ss;
-				ss << ((*current).*t_)();
-				return ss.str();
-			} catch (boost::bad_any_cast)
-			{
-			}
-		}
-		throw std::runtime_error("Unable to evaluate get expression with current scope.");
+		Cls & instance = scope_lookup_impl<Cls>::operator()(s);
+		std::stringstream ss;
+		ss << (instance.*t_)();
+		return ss.str();
 	}
 
 	template <typename F>
