@@ -246,3 +246,28 @@ BOOST_AUTO_TEST_CASE (test_scoped_each_expression)
 }
 
 //____________________________________________________________________________//
+
+BOOST_AUTO_TEST_CASE (test_double_nested_scoped_each_expression)
+{
+	std::list<dummy<0> > dummies0;
+	dummies0.push_back(dummy<0>("Dummy0 1"));
+	dummies0.push_back(dummy<0>("Dummy0 2"));
+
+	std::list<dummy<0> > dummies1;
+	dummies1.push_back(dummy<0>("Dummy1 1"));
+	dummies1.push_back(dummy<0>("Dummy1 2"));
+	dummies1.push_back(dummy<0>("Dummy1 3"));
+
+	scope s;
+	BOOST_REQUIRE_THROW(get<std::list<dummy<0> > >()(s), std::runtime_error);
+	BOOST_REQUIRE(s.instances().empty());
+	s.push(dummies0);
+	BOOST_REQUIRE_EQUAL(get<std::list<dummy<0> > >()(s).size(), 2);
+	s.push(dummies1);
+	BOOST_REQUIRE_EQUAL(get<std::list<dummy<0> > >()(s).size(), 3);
+	BOOST_REQUIRE(!s.instances().empty());
+	std::string result = each(get<std::list<dummy<0> > >(), get(&dummy<0>::id_) + "<br/>")(s);
+	BOOST_REQUIRE_EQUAL(result, "Dummy1 1<br/>Dummy1 2<br/>Dummy1 3<br/>");
+}
+
+//____________________________________________________________________________//
